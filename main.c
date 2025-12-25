@@ -17,7 +17,7 @@
 
 typedef enum CellType{
     fluid = 'f',
-    wall = 'w',
+    wall =  'w',
     empty = 'e'
 } CellType;
 
@@ -67,14 +67,15 @@ int main(int argc, char *argv[])
     uint8_t running = 1;
     SDL_Event event;
     Cell cells[COLs][ROWs];
-    CellType currentType = 'f';
+    CellType currentType = fluid;
 
     initCells(cells);
 
     while (running)
     {   
-        SDL_FillSurfaceRect(surface, NULL, BLACK);
+        SDL_FillSurfaceRect(surface, NULL, BLACK); // clear the screen
         
+        drawCells(surface, cells); // draw cells
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_EVENT_QUIT)
@@ -88,11 +89,8 @@ int main(int argc, char *argv[])
                 {
                     int x = event.motion.x/CELL_SIZE;
                     int y = event.motion.y/CELL_SIZE;
-                    if (x < 0 || x > COLs || y < 0 || y > ROWs) continue;
+                    if (x < 0 || x >= COLs || y < 0 || y >= ROWs) continue;
                     cells[x][y].type = currentType;
-                    // only redraw the cells when they changed
-                    drawCells(surface, cells);
-                    SDL_UpdateWindowSurface(window);
                 }
             }
             if (event.type == SDL_EVENT_KEY_DOWN)
@@ -124,6 +122,8 @@ int main(int argc, char *argv[])
             
             
         }
+
+        SDL_UpdateWindowSurface(window);
         SDL_Delay(16); // max 60 fps cap
     }
 }

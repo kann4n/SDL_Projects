@@ -3,7 +3,6 @@
 
 site https://planetseducation.com/mass-of-planets-in-order/
 
-> note that it is rounded to 0 decimal places for easy calculations
 
 ## Mercury
 
@@ -13,19 +12,20 @@ site https://planetseducation.com/mass-of-planets-in-order/
 
 > since it is the least mass, it is our base mass denoted by `M`
 
+> note that it is rounded for easy calculations
 
 ### All Planets
-- mercury = M
-- mars = 2 M
-- venus = 40 M
-- earth = 60 M
-- uranus = 900 M
-- neptune = 1,000 M
-- saturn = 6,000M
-- jupiter = 20,000M
+- Mercury = 1 M
+- Mars = 2 M 
+- Venus = 15 M 
+- Earth = 18 M 
+- Uranus = 263 M 
+- Neptune = 310 M 
+- Saturn = 1,722 M 
+- Jupiter = 5,750 M 
 
 ### Extra info 
 #### Sun
 
 > mass of sun = $2×10^{30}kg$
- that is 2,00,00,000 M
+ that is 6,027,000 M

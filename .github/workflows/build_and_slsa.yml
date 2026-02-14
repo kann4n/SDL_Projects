@@ -1,0 +1,80 @@
+name: SDL3 Build & SLSA Provenance
+
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      digests: ${{ steps.hash.outputs.digests }}
+
+    steps:
+      # 1️⃣ Checkout the repo
+      - uses: actions/checkout@v4
+
+      # 2️⃣ Install dependencies for Linux & cross-compiling Windows
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            gcc \
+            g++ \
+            libsdl3-dev \
+            libsdl3-image-dev \
+            mingw-w64 \
+            zip
+
+      # 3️⃣ Build Linux binaries
+      - name: Build Linux binaries
+        run: |
+          gcc main.c -o fluid -lSDL3
+          gcc random_walk.c -o random_walk -lSDL3
+          gcc space_sim.c -o space_sim -lSDL3 -lSDL3_image
+
+      # 4️⃣ Build Windows binaries (cross-compile)
+      - name: Build Windows binaries
+        run: |
+          x86_64-w64-mingw32-gcc main.c -o fluid.exe -lSDL3
+          x86_64-w64-mingw32-gcc random_walk.c -o random_walk.exe -lSDL3
+          x86_64-w64-mingw32-gcc space_sim.c -o space_sim.exe -lSDL3 -lSDL3_image
+
+      # 5️⃣ Generate SHA256 hashes for SLSA provenance
+      - name: Generate subject for provenance
+        id: hash
+        run: |
+          set -euo pipefail
+          files="fluid random_walk space_sim fluid.exe random_walk.exe space_sim.exe"
+          echo "hashes=$(sha256sum $files | base64 -w0)" >> "${GITHUB_OUTPUT}"
+
+  upload_release_assets:
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload binaries to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            fluid
+            random_walk
+            space_sim
+            fluid.exe
+            random_walk.exe
+            space_sim.exe
+
+  provenance:
+    needs: [build]
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.4.0
+    with:
+      base64-subjects: "${{ needs.build.outputs.digests }}"
+      upload-assets: true

@@ -1,154 +1,140 @@
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-#include <string.h>
 #include <math.h>
 
-#define SCREEN_WIDTH 900
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 1200
+#define SCREEN_HEIGHT 720
 
-void show_debug_info(const char *msg, int debug)
-{
-        SDL_Log("%s", msg);
-        if (debug)
-                SDL_Log(" | %s", SDL_GetError());
-}
-struct PippetPoint
-{
-        float x;
-        float y;
-};
+typedef enum BodyTex {
+        SUN,
+        EARTH,
+        MOON,
+        BODY_COUNT // tip it say the count without counting
+} BodyTex;
 
-typedef struct
-{
-        char name[16]; // 2 bytes
-        int mass;      // int will work since it rel mass to mercury
-        float radius;
-        struct PippetPoint pippetPoint; // this is the point the body will orbit around
-        float distance; // distance from pippetPoint
-        SDL_Texture *texture;
+typedef struct Body {
+        const char* name;
+        float orbit_speed;
+        float orbit_radius;
+        float angle;
+        SDL_Texture* texture;
         SDL_FRect rect;
+        struct Body* parent; // Orbit around this body
 } Body;
 
-int main(int argc, char *argv[])
+// Helper to update body position based on time and parent
+void update_body(Body* b, float delta_time, float centerX, float centerY)
 {
-        int debug = 0;
+        b->angle += b->orbit_speed * delta_time;
+      
+        float px
+                = b->parent ? (b->parent->rect.x + b->parent->rect.w / 2.0f) : centerX;
+        float py
+                = b->parent ? (b->parent->rect.y + b->parent->rect.h / 2.0f) : centerY;
 
-        // 2. Check for "-d" flag
-        if (argc > 1)
-        {
-                if (strcmp(argv[1], "-d") == 0)
-                {
-                        SDL_Log("Debug Mode: Enabled");
-                        debug = 1;
-                }
+        b->rect.x = px + b->orbit_radius * cosf(b->angle) - b->rect.w / 2.0f;
+        b->rect.y = py + b->orbit_radius * sinf(b->angle) - b->rect.h / 2.0f;
+}
+
+void cleanup(SDL_Window* win, SDL_Renderer* ren, SDL_Texture** texs, int tex_count)
+{
+        for (int i = 0; i < tex_count; i++) {
+                if (texs[i])
+                        SDL_DestroyTexture(texs[i]);
         }
+        SDL_DestroyRenderer(ren);
+        SDL_DestroyWindow(win);
+        SDL_Quit();
+        SDL_Log("Resources cleaned and program terminated.");
+}
 
+int main(int argc, char* argv[])
+{
         if (!SDL_Init(SDL_INIT_VIDEO))
-        {
-                show_debug_info("SDL_Init Failed", debug);
-                return -1; // -1 = init error
+                return -1;
+
+        SDL_Window* window = NULL;
+        SDL_Renderer* renderer = NULL;
+
+        if (!SDL_CreateWindowAndRenderer("Space Sim", SCREEN_WIDTH, SCREEN_HEIGHT,
+                SDL_WINDOW_MAXIMIZED  , &window, &renderer)) {
+                SDL_Log("Window Error: %s", SDL_GetError());
+                return -2;
         }
 
-        SDL_Window *pwindow = NULL;
-        SDL_Renderer *prenderer = NULL;
+        // Load Textures
+        SDL_Texture* tex[BODY_COUNT];
+        tex[SUN] = IMG_LoadTexture(renderer, "imgs/assets/sun.png");
+        tex[EARTH] = IMG_LoadTexture(renderer, "imgs/assets/earth.png");
+        tex[MOON] = IMG_LoadTexture(renderer, "imgs/assets/moon.jpg");
 
-        if (!SDL_CreateWindowAndRenderer("Space Sim", SCREEN_WIDTH, SCREEN_HEIGHT, 0, &pwindow, &prenderer))
-        {
-                show_debug_info("Window/Renderer Failed", debug);
-                return -2; // -2 = window/rend error
+        if (!tex[0] || !tex[1] || !tex[2]) {
+                SDL_Log("Texture Error: %s", SDL_GetError());
+                cleanup(window, renderer, tex, 3);
+                return -3;
         }
 
-        int running = 1;
-
-        SDL_Texture *sunTex = IMG_LoadTexture(prenderer, "imgs/assets/sun.png");
-        SDL_Texture *earthTex = IMG_LoadTexture(prenderer, "imgs/assets/earth.png");
-        SDL_Texture *moonTex = IMG_LoadTexture(prenderer, "imgs/assets/moon.jpg");
-
-        if (!sunTex || !earthTex || !moonTex)
-        {
-                show_debug_info("Failed to Load Textures", debug);
-                SDL_DestroyRenderer(prenderer);
-                SDL_DestroyWindow(pwindow);
-                return -3; // -3 = texture load error
-        }
-
-        float sunSize = 100;
-        float centerX = SCREEN_WIDTH / 2;
-        float centerY = SCREEN_HEIGHT / 2;
-
-        SDL_FRect sunRect = {centerX - sunSize / 2, centerY - sunSize / 2, sunSize, sunSize};
+        Body sun = {
+            .name = "Sun",
+            .orbit_speed = 0.0f,
+            .orbit_radius = 0,
+            .angle = 0,
+            .texture = tex[SUN], // sun Texture
+            .rect = { SCREEN_WIDTH / 2.0f - 100 / 2, SCREEN_HEIGHT / 2.0f - 100 / 2, 100, 100 },
+            .parent = NULL
+        };
 
         Body earth = {
             .name = "Earth",
-            .mass = 18,
-            .radius = 25,
-            .pippetPoint = {centerX, centerY},
-            .distance = 200,
-            .texture = earthTex,
-            .rect = {600, 300, 50, 50},
-        };
-        Body moon = {
-            .name = "Moon",
-            .mass = 1,
-            .radius = 10,
-            .pippetPoint = {earth.rect.x + earth.radius, earth.rect.y + earth.radius},
-            .distance = 60,
-            .texture = moonTex,
-            .rect = {650, 300, 20, 20},
+            .orbit_speed = 0.5f,
+            .orbit_radius = 200.0f,
+            .angle = 0,
+            .texture = tex[EARTH], // earth Texture
+            .rect = { 0, 0, 50, 50 }, // will be done via update call
+            .parent = NULL
         };
 
-        float time = 0;
-        float moontimeScale = 1.1;
-        while (running)
-        {
+        Body moon = {
+            .name = "Moon",
+            .orbit_speed = 2.0f,
+            .orbit_radius = 60.0f,
+            .angle = 0,
+            .texture = tex[MOON],
+            .rect = { 0, 0, 20, 20 }, // will be done via update call
+            .parent = &earth
+        };
+
+        int running = 1;
+        Uint64 last_ticks = SDL_GetTicks();
+
+        while (running) {
                 SDL_Event event;
-                while (SDL_PollEvent(&event))
-                {
+                while (SDL_PollEvent(&event)) {
                         if (event.type == SDL_EVENT_QUIT)
                                 running = 0;
                 }
 
-                SDL_SetRenderDrawColor(prenderer, 0, 0, 0, 255); // black bg
-                SDL_RenderClear(prenderer);                      // clear with black
+                // Delta Time calculation
+                Uint64 current_ticks = SDL_GetTicks();
+                float delta = (current_ticks - last_ticks) / 1000.0f;
+                last_ticks = current_ticks;
 
-                // sun
-                SDL_RenderTexture(prenderer, sunTex, NULL, &sunRect);
-                // earth
-                SDL_RenderTexture(prenderer, earthTex, NULL, &earth.rect);
-                // moon
-                SDL_RenderTexture(prenderer, moonTex, NULL, &moon.rect);
-                // earth rotate anim by math sin and cos
-                // curr this is fake need to study phy and math more to make it more real
-                // to use
-                //      Fgi = G * m1 * m2 / r^2
-                //      Fei = K * q1 * q2 / r^2
-                //      Fi = Fgi + Fei for i th planet by for loop idk
-                // todo
-                //      make more animation and add more planets
-                //      make orbit hints and fix time scale
-                //      use real values
-                //      add satalaites and sound and muisc
-                //      add randome twists like comets and meteors alins and god kannan cameo idk but why 
-                earth.rect.y = earth.pippetPoint.y + earth.distance * cos(time);
-                earth.rect.x = earth.pippetPoint.x + earth.distance * sin(time);
+                // Update Physics
+                update_body(&earth, delta, sun.rect.x + sun.rect.w / 2.0f, sun.rect.y + sun.rect.h / 2.0f);
+                update_body(&moon, delta, 0, 0); // Center is ignored because moon has a parent
 
-                moon.rect.y = moon.pippetPoint.y + moon.distance * cos(time*moontimeScale);
-                moon.rect.x = moon.pippetPoint.x + moon.distance * sin(time*moontimeScale);
+                // Render
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(renderer, 5, 5, 15, 20); // Deep space blue/black
+                SDL_RenderFillRect(renderer, NULL);
 
-                time += 0.01;
-                moon.pippetPoint.x = earth.rect.x + earth.radius;
-                moon.pippetPoint.y = earth.rect.y + earth.radius;
+                SDL_RenderTexture(renderer, sun.texture, NULL, &sun.rect);
+                SDL_RenderTexture(renderer, earth.texture, NULL, &earth.rect);
+                SDL_RenderTexture(renderer, moon.texture, NULL, &moon.rect);
 
-                SDL_RenderPresent(prenderer);
-                SDL_Delay(16);
+                SDL_RenderPresent(renderer);
         }
 
-        // Distroy
-        SDL_Log("Program Terminated");
-        SDL_DestroyTexture(sunTex);
-        SDL_DestroyTexture(earthTex);
-        SDL_DestroyRenderer(prenderer);
-        SDL_DestroyWindow(pwindow);
-        SDL_Quit();
+        cleanup(window, renderer, tex, BODY_COUNT);
         return 0;
 }

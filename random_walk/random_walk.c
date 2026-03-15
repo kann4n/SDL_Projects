@@ -93,7 +93,7 @@ int main(int argc, const char *argv[]) // argc = arg count, argv = arg vector
     {
         num_of_agent = atoi(argv[1]);
     }
-    else if (argc >= 2)
+    else if (argc > 2)
     {
         printf("Usage : <num_of_agent>\n");
         return 1;
@@ -109,7 +109,7 @@ int main(int argc, const char *argv[]) // argc = arg count, argv = arg vector
     SDL_Surface *psurface = SDL_GetWindowSurface(pwindow);
     const SDL_PixelFormatDetails *Pixformat = SDL_GetPixelFormatDetails(psurface->format);
 
-    Agent *agents = malloc(sizeof(SDL_Rect) * num_of_agent);
+    Agent *agents = malloc(sizeof(Agent) * num_of_agent);
     for (int i = 0; i < num_of_agent; i++)
     {
         agents[i].rect.x = SCREEN_WIDTH / 2;

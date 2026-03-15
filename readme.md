@@ -2,7 +2,7 @@
     <tr>
         <td>
             <h3>Fluid</h3>
-            <img src="/imgs/fluid-v1.png" width="400"/>
+            <img src="imgs/fluid-v1.png" width="400"/>
             <p>
                 <strong>Mechanism</strong><br>
                 A grid-based cellular automata simulation focusing on fluid dynamics.
@@ -14,7 +14,7 @@
             </p>
             <p>
                 <strong>Compile</strong><br>
-                <code>gcc fluid.c -o fluid -lSDL3</code>
+                <code>cd fluid && gcc fluid.c -o fluid -lSDL3</code>
             </p>
             <p>
                 <strong>Run</strong><br>
@@ -23,7 +23,7 @@
         </td>
         <td>
             <h3>Random Walk</h3>
-            <img src="/imgs/random-walk-v1.png" width="400"/>
+            <img src="imgs/random-walk-v1.png" width="400"/>
             <p>
                 <strong>Mechanism</strong><br>
                 A multi-agent simulation where each "agent" performs a stochastic path.
@@ -35,7 +35,7 @@
             </p>
             <p>
                 <strong>Compile</strong><br>
-                <code>gcc random_walk.c -o random_walk -lSDL3 -lm</code>
+                <code>cd random_walk && gcc random_walk.c -o random_walk -lSDL3 -lm</code>
             </p>
             <p>
                 <strong>Run</strong><br>
@@ -46,7 +46,7 @@
     <tr>
         <td>
             <h3>Space Sim</h3>
-            <img src="/imgs/space-sim-v0.1.png" width="400"/>
+            <img src="imgs/space-sim-v0.1.png" width="400"/>
             <p>
                 <strong>Mechanism</strong><br>
                 A 2D orbital mechanics simulation using parent-child relationships.
@@ -58,7 +58,7 @@
             </p>
             <p>
                 <strong>Compile</strong><br>
-                <code>gcc space_sim.c -o space_sim -lSDL3 -lSDL3_image -lm</code>
+                <code>cd space_sim && gcc space_sim.c -o space_sim -lSDL3 -lSDL3_image -lm</code>
             </p>
             <p>
                 <strong>Run</strong><br>

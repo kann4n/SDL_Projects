@@ -83,10 +83,10 @@ int main(int argc, char* argv[])
         SDL_SetRenderVSync(renderer, 1); // 1 = On, 0 = Off
         // Load Textures
         SDL_Texture* tex[BODY_COUNT];
-        tex[SUN] = IMG_LoadTexture(renderer, "imgs/assets/sun.png");
-        tex[MERCURY] = IMG_LoadTexture(renderer, "imgs/assets/mercury.png");
-        tex[EARTH] = IMG_LoadTexture(renderer, "imgs/assets/earth.png");
-        tex[MOON] = IMG_LoadTexture(renderer, "imgs/assets/moon.jpg");
+        tex[SUN] = IMG_LoadTexture(renderer, "../imgs/assets/sun.png");
+        tex[MERCURY] = IMG_LoadTexture(renderer, "../imgs/assets/mercury.png");
+        tex[EARTH] = IMG_LoadTexture(renderer, "../imgs/assets/earth.png");
+        tex[MOON] = IMG_LoadTexture(renderer, "../imgs/assets/moon.jpg");
 
         if (!tex[0] || !tex[1] || !tex[2]) {
                 SDL_Log("Texture Error: %s", SDL_GetError());
@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
                         .angle = 0,
                         .texture = tex[EARTH],
                         .rect = {0, 0, 50, 50},
-                        .parent = NULL
+                        .parent = &bodies[SUN]
                 },
                 [MOON] = {
                         .name = "Moon",

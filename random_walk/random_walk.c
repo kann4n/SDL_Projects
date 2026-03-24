@@ -117,12 +117,21 @@ int main(int argc, const char *argv[]) // argc = arg count, argv = arg vector
         agents[i].rect.w = R_WIDTH;
         agents[i].rect.h = R_HEIGHT;
         
-        float h = (float) (360/num_of_agent) * i;
-        Uint8 r, g, b;
-        HSLtoRGB(h, 1.0f, 0.5f, &r, &g, &b);
 
-        // Convert separate r,g,b into a format SDL understands for this surface
-        agents[i].color = SDL_MapRGB(Pixformat,NULL, r, g, b);
+	// Check if this is the very last agent in the array
+        if (i == num_of_agent - 1 && num_of_agent > 1) 
+        {
+            // Set the last agent to black
+            agents[i].color = SDL_MapRGB(Pixformat, NULL, 1, 1, 1);
+        }
+        else 
+        {
+            // Set other agents to their HSL calculated colors
+            float h = (float)(360.0 / (num_of_agent > 1 ? num_of_agent - 1 : 1)) * i;
+            Uint8 r, g, b;
+            HSLtoRGB(h, 1.0f, 0.5f, &r, &g, &b);
+            agents[i].color = SDL_MapRGB(Pixformat, NULL, r, g, b);
+        }
     }
 
     srand(time(NULL));

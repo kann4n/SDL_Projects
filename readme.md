@@ -65,5 +65,26 @@
                 <code>./space_sim</code>
             </p>
         </td>
+        <td>
+            <h3>Digital Clock</h3>
+            <img src="imgs/digital-clock.png" width="400"/>
+            <p>
+                <strong>Mechanism</strong><br>
+                A real-time digital clock rendered using 7-segment display logic.
+                <ul>
+                    <li><strong>7-Segment Display:</strong> Each digit is drawn by selectively filling horizontal and vertical segments based on the digit value.</li>
+                    <li><strong>Real-Time:</strong> Reads the current system time each frame to update the display of hours, minutes, and seconds.</li>
+                    <li><strong>Colons:</strong> Blinking colon separators are rendered between the hour, minute, and second digit pairs.</li>
+                </ul>
+            </p>
+            <p>
+                <strong>Compile</strong><br>
+                <code>cd digital_clock && gcc main.c clock.c -o digital_clock -lSDL3</code>
+            </p>
+            <p>
+                <strong>Run</strong><br>
+                <code>./digital_clock</code>
+            </p>
+        </td>
     </tr>
 </table>

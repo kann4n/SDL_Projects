@@ -1,7 +1,38 @@
 #include "clock.h"
+#include <stdio.h>
 
-int main()
+int parse_args(int argc, char *argv[], enum Mode *mode) {
+    if (argc == 2) {
+        if (argv[1][0] == 'c') {
+            *mode = CLOCK;
+        } else if (argv[1][0] == 't') {
+            *mode = TIMER;
+        } else if (argv[1][0] == 's') {
+            *mode = STOPWATCH;
+        } else {
+            SDL_Log("Unknown mode: %s\nUsage: %s [c|t|s]", argv[1], argv[0]);
+            return 0; // here 0 = failure
+        }
+    }
+    return 1; // here 1 = success
+}
+
+int main(int argc, char *argv[])
 {
+    enum Mode mode = CLOCK; // default mode
+    int start_timesec = 0;
+    if (!parse_args(argc, argv, &mode)) return -1;
+    if(mode == TIMER)
+    {
+        printf("Press Enter to start/pause the timer...");
+        getchar(); // Wait for user to press Enter
+    }
+    else if(mode == STOPWATCH)
+    {
+        printf("Set the stopwatch time in seconds: ");
+        scanf("%d", &start_timesec);
+    }
+
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
         SDL_Log("Video Init Error: %s", SDL_GetError());
@@ -32,7 +63,7 @@ int main()
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        display_clock(renderer);
+        display_clock(renderer, mode, start_timesec);
         display_colon(renderer, colons);
 
         // present the final output

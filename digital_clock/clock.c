@@ -1,33 +1,9 @@
 #include "clock.h"
+#include "data.h"
 #include <time.h>
 
-const SDL_FColor COLOR_ON = {1.0f, 0.0f, 0.0f, 1.0f};
-const SDL_FColor COLOR_OFF = {0.2f, 0.0f, 0.0f, 0.4f};
-
-static int digits[10][7] = {
-    // top, middle, bottom, top-left, top-right, bottom-right, bottom-left
-    {1, 0, 1, 1, 1, 1, 1}, // 0
-    {0, 0, 0, 0, 1, 1, 0}, // 1
-    {1, 1, 1, 0, 1, 0, 1}, // 2
-    {1, 1, 1, 0, 1, 1, 0}, // 3
-    {0, 1, 0, 1, 1, 1, 0}, // 4
-    {1, 1, 1, 1, 0, 1, 0}, // 5
-    {1, 1, 1, 1, 0, 1, 1}, // 6
-    {1, 0, 0, 0, 1, 1, 0}, // 7
-    {1, 1, 1, 1, 1, 1, 1}, // 8
-    {1, 1, 1, 1, 1, 1, 0}  // 9
-};
-
-static const float ymid = SCREEN_HIG / 2.0f;
-static const float spacing = 5.0f;
-
-static SDL_FPoint digits_center_points[6] = {
-    {SEGMENT_LEN * 2 - spacing, ymid},
-    {SEGMENT_LEN * 3 + SEGMENT_WID * 2 + spacing, ymid},
-    {SEGMENT_LEN * 6 - spacing, ymid},
-    {SEGMENT_LEN * 7 + SEGMENT_WID * 2 + spacing, ymid},
-    {SEGMENT_LEN * 10 - spacing, ymid},
-    {SEGMENT_LEN * 11 + SEGMENT_WID * 2 + spacing, ymid}};
+SDL_FColor SegOn = {1, 0, 0, 255};
+SDL_FColor SegOff = {0, 0, 0, 255};
 
 void display_segment(SDL_Renderer *renderer, SDL_FPoint center, int align_vertical, int fill)
 {
@@ -58,21 +34,12 @@ void display_segment(SDL_Renderer *renderer, SDL_FPoint center, int align_vertic
     for (int i = 0; i < 6; i++)
     {
         vertexs[i].position = points[i];
-        vertexs[i].color = fill ? COLOR_ON : COLOR_OFF;
+        vertexs[i].color = fill ? SegOn : SegOff;
     }
-
-    if (fill)
-    {
-        SDL_RenderGeometry(renderer, NULL, vertexs, 6, tris, 12);
-    }
-    else
-    {
-        SDL_SetRenderDrawColor(renderer, 50, 0, 0, 100);
-        SDL_RenderLines(renderer, points, 7);
-    }
+    SDL_RenderGeometry(renderer, NULL, vertexs, 6, tris, 12);
 }
 
-void display_7segment(SDL_Renderer *renderer, SDL_FPoint centerDig, int *pfilled_segments)
+void display_7segment(SDL_Renderer *renderer, SDL_FPoint centerDig,const int *pfilled_segments)
 {
     float halflen = SEGMENT_LEN / 2;
     float halfgap = GAP / 2;
@@ -110,7 +77,7 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
             display_7segment(renderer, digits_center_points[i], digits[c_digs[i]]);
         }
     }
-    else if (mode == TIMER)
+    else if (mode == STOPWATCH)
     {
         // Initialize start time once when we switch to this mode
         if (timer_start == 0) timer_start = time(NULL);
@@ -129,13 +96,19 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
         for (int i = 0; i < 6; i++)
             display_7segment(renderer, digits_center_points[i], digits[c_digs[i]]);
     }
-    else if (mode == STOPWATCH)
+    else if (mode == TIMER)
     {
         // Initialize start time once when we switch to this mode
         if (timer_start == 0) timer_start = time(NULL);
 
         double timepassed = difftime(time(NULL), timer_start);
         double remaining_time = start_timesec - timepassed;
+        if (remaining_time < 0)
+        {
+            remaining_time = 0;
+            SDL_Log("Timer finished!");
+            return;
+        }
         int hours = (int)remaining_time / 3600;
         int mins = ((int)remaining_time / 60) % 60;
         int secs = (int)remaining_time % 60;
@@ -152,6 +125,7 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
     else
     {
         SDL_Log("Unknown mode: %c", mode);
+        return;
     }
 }
 

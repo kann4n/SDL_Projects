@@ -16,15 +16,29 @@ enum Mode
     CLOCK = 'c'
 };
 
+enum State
+{
+    STOPPED = -1,
+    PAUSED = 0,
+    RUNNING = 1
+};
+
 typedef struct Time{
     int hour;
     int minute;
     int second;
 } Time;
 
+typedef struct Clock{
+    Time time;
+    int start_timesec;
+    enum State state; // -1 = stopped, 0 = paused, 1 = running
+    enum Mode mode;
+} Clock;
+
 // Function prototypes
 void display_segment(SDL_Renderer *renderer, SDL_FPoint center, int align_vertical, int fill);
-void display_7segment(SDL_Renderer *renderer, SDL_FPoint centerDig, int *pfilled_segments);
+void display_7segment(SDL_Renderer *renderer, SDL_FPoint centerDig, const int *pfilled_segments);
 void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec);
 void display_colon(SDL_Renderer *renderer, SDL_FPoint centers[2]);
 

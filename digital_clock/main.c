@@ -1,15 +1,24 @@
 #include "clock.h"
 #include <stdio.h>
 
-int parse_args(int argc, char *argv[], enum Mode *mode) {
-    if (argc == 2) {
-        if (argv[1][0] == 'c') {
+int parse_args(int argc, char *argv[], enum Mode *mode)
+{
+    if (argc == 2)
+    {
+        if (argv[1][0] == 'c')
+        {
             *mode = CLOCK;
-        } else if (argv[1][0] == 't') {
+        }
+        else if (argv[1][0] == 't')
+        {
             *mode = TIMER;
-        } else if (argv[1][0] == 's') {
+        }
+        else if (argv[1][0] == 's')
+        {
             *mode = STOPWATCH;
-        } else {
+        }
+        else
+        {
             SDL_Log("Unknown mode: %s\nUsage: %s [c|t|s]", argv[1], argv[0]);
             return 0; // here 0 = failure
         }
@@ -21,16 +30,20 @@ int main(int argc, char *argv[])
 {
     enum Mode mode = CLOCK; // default mode
     int start_timesec = 0;
-    if (!parse_args(argc, argv, &mode)) return -1;
-    if(mode == TIMER)
+    if (!parse_args(argc, argv, &mode))
+        return -1;
+    if (mode == TIMER)
     {
-        printf("Press Enter to start/pause the timer...");
+        printf("Set the timer time in seconds: ");
+        scanf("%d", &start_timesec);
+
+        printf("Press Enter to start/pause the timer");
         getchar(); // Wait for user to press Enter
     }
-    else if(mode == STOPWATCH)
+    else if (mode == STOPWATCH)
     {
-        printf("Set the stopwatch time in seconds: ");
-        scanf("%d", &start_timesec);
+        printf("Press Enter to start stopwatch\n");
+        getchar();
     }
 
     if (!SDL_Init(SDL_INIT_VIDEO))
@@ -56,8 +69,24 @@ int main(int argc, char *argv[])
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_EVENT_QUIT)
-                running = 0;
+            switch (event.type)
+            {
+                case SDL_EVENT_QUIT:
+                    running = 0;
+                    break;
+                case SDL_EVENT_KEY_DOWN:
+                    if (event.key.key == SDLK_SPACE)
+                    {
+                        //    todo: will do later
+                    }
+                    else if (event.key.key == SDLK_ESCAPE || event.key.key == SDLK_Q)
+                    {
+                        running = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         // clear with black color
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

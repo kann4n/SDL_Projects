@@ -124,7 +124,11 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
     }
     else
     {
-        SDL_Log("Unknown mode: %c", mode);
+        static int logged_error = 0; // to avoid spamming logs
+        if (!logged_error) {
+            SDL_Log("Unknown mode: %d", mode);
+            logged_error = 1;
+        }
         return;
     }
 }

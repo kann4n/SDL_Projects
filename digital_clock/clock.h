@@ -3,11 +3,12 @@
 
 #include <SDL3/SDL.h>
 
-#define SEGMENT_LEN 50.0f
-#define SEGMENT_WID 10.0f
-#define GAP 4.0f
-#define SCREEN_WID 670
-#define SCREEN_HIG 200
+// Config
+#define SEGMENT_LEN 50.0f   // be > WID
+#define SEGMENT_WID 15.0f   // be < LEN/2
+#define GAP 5.0f            // be < WID/4 
+#define SCREEN_WID 670      // be > (LEN+WID)*6
+#define SCREEN_HIG 300      // be > LEN*3
 
 enum Mode 
 {

@@ -56,11 +56,6 @@ struct PlayerControls
         int rotLeft, rotRight;
 };
 
-struct Wall{
-        float x, y;
-        float width, hight;
-};
-
 void draw_map(SDL_Renderer *renderer)
 {
         for (int i = 0; i < MAP_YB; i++)
@@ -114,13 +109,6 @@ void draw_player(SDL_Renderer *renderer, struct Player player)
 //                 SDL_RenderLine(renderer, player.x, player.y, player.x + kos*distence, player.y + kin*distence);
 //         }
 // }
-void draw_wall(SDL_Renderer *renderer, struct Wall wall, float distance){
-        SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255);
-        if (distance < 0) distance = 0.001;
-        float wallHight = wall.hight/distance;
-        SDL_FRect wall_rect = {wall.x, wall.y, wall.width, wallHight};
-        SDL_RenderRect(renderer, &wall_rect);
-}
 
 void draw_rays(SDL_Renderer *renderer, struct Player player)
 {
@@ -214,10 +202,18 @@ void draw_rays(SDL_Renderer *renderer, struct Player player)
                 //                player.y,
                 //                player.x + rayDirX * wallDist * TILE_SIZE,
                 //                player.y + rayDirY * wallDist * TILE_SIZE);
-                float wallx = player.x + rayDirX * wallDist * TILE_SIZE;
-                float wally = player.y+ rayDirY * wallDist * TILE_SIZE;
-                struct Wall wall = {wallx, wally, 1, 100};
-                draw_wall(renderer, wall, wallDist);
+                if (wallDist <= 0) wallDist = 0.01;
+                float wallH = SCREEN_HIG/wallDist;
+                float wallW = SCREEN_WID/RAYS;
+                float wallY = SCREEN_HIG/2 - wallDist/2;
+                float wallX = i*wallW;
+                SDL_FRect wall = {wallX, wallY, wallW, wallH};
+                if (i%2 == 0) SDL_SetRenderDrawColor(renderer, 255, 100, 100, 255);
+                else if (i%3 == 0) SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
+                else if (i%5 == 0) SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255);
+                else SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+                SDL_RenderFillRect(renderer, &wall);
+                
         }
 }
 
@@ -318,7 +314,7 @@ int main(int argc, char *argv[])
                 SDL_RenderClear(renderer);
 
                 // draw_map(renderer);
-                draw_player(renderer, player);
+                // draw_player(renderer, player);
                 draw_rays(renderer, player);
 
                 SDL_RenderPresent(renderer);

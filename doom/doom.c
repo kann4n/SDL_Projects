@@ -1,4 +1,5 @@
 #include "kengine.h"
+#include <stdio.h>
 
 int main(int argc, char *argv[])
 {
@@ -67,7 +68,6 @@ int main(int argc, char *argv[])
                 SDL_SetRenderDrawColor(renderer, 0, 51, 51, 255); // blueblack floor
                 SDL_FRect floor = {0, SCREEN_HIG / 2, SCREEN_WID, SCREEN_HIG / 2};
                 SDL_RenderFillRect(renderer, &floor);
-
                 draw_3d(renderer, player);
                 draw_map(renderer);
                 draw_player(renderer, player);

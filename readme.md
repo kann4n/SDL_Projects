@@ -1,3 +1,7 @@
+<h1>SDL Projects</h1>
+
+<p>A collection of interactive simulations and games built with SDL3.</p>
+
 <table>
     <tr>
         <td>
@@ -85,6 +89,30 @@
                 <strong>Run</strong><br>
                 <code>./digital_clock</code>
             </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h3>Doom</h3>
+            <img src="imgs/raycaster-game001.png" width="400"/>
+            <p>
+                <strong>Mechanism</strong><br>
+                A 3D raycasting engine using DDA (Digital Differential Analyzer) for efficient ray-grid traversal.
+                <ul>
+                    <li><strong>DDA Algorithm:</strong> Efficiently traces rays through the 2D grid to detect wall intersections.</li>
+                    <li><strong>3D Rendering:</strong> Converts 2D map data into a first-person perspective with sky, floor, and walls.</li>
+                    <li><strong>Real-Time:</strong> Smooth player movement and rotation with easy to configurable options.</li>
+                </ul>
+            </p>
+            <p>
+                <strong>Compile</strong><br>
+                <code>cd doom && gcc doom.c kengine.c -o doom -lSDL3 -lm</code>
+            </p>
+            <p>
+                <strong>Run</strong><br>
+                <code>./doom</code>
+            </p>
+            <h6>Learn more about DDA: [Lode's Raycasting Tutorial](https://lodev.org)</h6>
         </td>
     </tr>
 </table>

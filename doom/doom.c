@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <math.h>
 
-#define SCREEN_WID 500
-#define SCREEN_HIG 500
-#define MAP_XB 24
-#define MAP_YB 24
+#define SCREEN_WID 800
+#define SCREEN_HIG 600
+#define MAP_XB 32
+#define MAP_YB 32
 #define TILE_SIZE 50
 #define MAP_SIZE 200
 #define MAPTILE_WIDTH (MAP_SIZE / MAP_XB)
@@ -16,32 +16,39 @@
 #define M_PI 3.14159265358979323846
 #define DEG_TO_RAD(angle) ((angle) * M_PI / 180.0f)
 
-int map[MAP_YB][MAP_XB] =
-    {
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 4, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 4, 0, 0, 0, 0, 5, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 4, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 4, 0, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+int map[MAP_YB][MAP_XB] = {
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 2, 2, 2, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 1},
+    {1, 0, 2, 0, 0, 0, 0, 0, 2, 0, 4, 4, 4, 4, 4, 4, 0, 5, 5, 5, 5, 5, 5, 0, 0, 0, 3, 0, 3, 0, 0, 1},
+    {1, 0, 2, 0, 2, 2, 2, 0, 2, 0, 4, 0, 0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 3, 0, 3, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 2, 0, 2, 2, 2, 0, 2, 0, 4, 0, 0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 3, 3, 3, 0, 0, 1},
+    {1, 0, 2, 2, 2, 0, 2, 2, 2, 0, 4, 0, 0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 1},
+    {1, 0, 4, 4, 4, 4, 4, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 2, 0, 2, 0, 0, 1},
+    {1, 0, 4, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 2, 2, 0, 0, 1},
+    {1, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 4, 4, 0, 4, 4, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 1},
+    {1, 0, 3, 3, 0, 3, 3, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 5, 5, 0, 5, 5, 0, 0, 1},
+    {1, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 3, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 3, 0, 0, 0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 4, 4, 4, 0, 0, 1},
+    {1, 0, 3, 3, 3, 3, 3, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 4, 0, 4, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 5, 5, 5, 0, 5, 5, 5, 0, 2, 0, 0, 0, 0, 2, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 2, 2, 2, 0, 0, 1},
+    {1, 0, 5, 0, 0, 0, 0, 0, 5, 0, 2, 0, 0, 0, 0, 2, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 2, 0, 2, 0, 0, 1},
+    {1, 0, 5, 0, 5, 5, 5, 0, 5, 0, 2, 0, 0, 0, 0, 2, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 2, 2, 2, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 5, 0, 5, 5, 5, 0, 5, 0, 2, 2, 2, 2, 2, 2, 0, 4, 4, 4, 4, 4, 4, 0, 0, 0, 3, 3, 3, 0, 0, 1},
+    {1, 0, 5, 5, 5, 0, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 3, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
 struct Player
 {
@@ -69,13 +76,15 @@ void draw_map(SDL_Renderer *renderer)
                 for (int j = 0; j < MAP_XB; j++)
                 {
                         if (map[i][j] == 1)
-                                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
+                                SDL_SetRenderDrawColor(renderer, 100, 100, 100, 200);
                         else if (map[i][j] == 2)
-                                SDL_SetRenderDrawColor(renderer, 0, 255, 255, 200);
+                                SDL_SetRenderDrawColor(renderer, 139, 69, 15, 200);
                         else if (map[i][j] == 3)
-                                SDL_SetRenderDrawColor(renderer, 0, 25, 255, 200);
-                        else if (map[i][j] > 0)
-                                SDL_SetRenderDrawColor(renderer, 255, 200, 255, 200);
+                                SDL_SetRenderDrawColor(renderer, 180, 50, 50, 200);
+                        else if (map[i][j] > 4)
+                                SDL_SetRenderDrawColor(renderer, 0, 180, 185, 200);
+                        else if (map[i][j] == 5)
+                                SDL_SetRenderDrawColor(renderer, 40, 150, 50, 200);
                         else
                                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
                         SDL_FRect block = {
@@ -243,13 +252,18 @@ void draw_3d(SDL_Renderer *renderer, struct Player player)
                 SDL_FRect wall = {wallX, wallY, wallW, wallH};
 
                 if (celltype == 1)
-                        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // red
+                        SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
                 else if (celltype == 2)
-                        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // green
+                        SDL_SetRenderDrawColor(renderer, 139, 69, 15, 255);
                 else if (celltype == 3)
-                        SDL_SetRenderDrawColor(renderer, 30, 60, 255, 255); // Blue
+                        SDL_SetRenderDrawColor(renderer, 180, 50, 50, 255);
+                else if (celltype > 4)
+                        SDL_SetRenderDrawColor(renderer, 0, 180, 185, 255);
+                else if (celltype == 5)
+                        SDL_SetRenderDrawColor(renderer, 40, 150, 50, 255);
                 else
-                        SDL_SetRenderDrawColor(renderer, 100, 0, 100, 255); // Pink/Misc
+                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
+                // xy lighting
                 if (side == 1)
                 {
                         Uint8 r, g, b, a;
@@ -311,12 +325,18 @@ int main(int argc, char *argv[])
         SDL_Renderer *renderer;
         if (!SDL_CreateWindowAndRenderer("Doom", SCREEN_WID, SCREEN_HIG, 0, &window, &renderer))
                 return -2;
+        // renderer config
         // set apllha mode on
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        // set vsync on/off(if this is on comment out sdl_delay because this func will do it)
+        SDL_SetRenderVSync(renderer, 1); // 2nd para = vsync interval
+
         struct Player player = {150, 150, 5, 3.0f, 0, 0.05f, DEG_TO_RAD(60)};
         struct PlayerControls pcontrol = {0};
-        int running = 1;
 
+        Uint64 lastTime = SDL_GetTicks();
+        Uint64 frameKount = 0;
+        int running = 1;
         while (running)
         {
                 SDL_Event event;
@@ -369,7 +389,18 @@ int main(int argc, char *argv[])
                 draw_player(renderer, player);
 
                 SDL_RenderPresent(renderer);
-                SDL_Delay(16);
+
+                // other things
+                frameKount++;
+                Uint64 currentTime = SDL_GetTicks();
+                if (currentTime - lastTime > 1000)
+                {
+                        char title[60];
+                        sprintf(title, "fps: %ld", frameKount);
+                        SDL_SetWindowTitle(window, title);
+                        lastTime = currentTime;
+                        frameKount = 0;
+                }
         }
 
         SDL_DestroyRenderer(renderer);

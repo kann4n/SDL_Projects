@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SDL Projects Showcase</title>
+    <meta name="description" content="Scalable, minimal, responsive showcase for SDL projects." />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="bg-shape bg-shape--one" aria-hidden="true"></div>
+    <div class="bg-shape bg-shape--two" aria-hidden="true"></div>
+
+    <header class="site-header">
+        <div class="container">
+            <h1>SDL Projects</h1>
+            <p class="subtitle">
+                SDL projects, indexed in one place. 
+                For easy and quick discovery, filtering, and exploration.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="controls" aria-label="Filters">
+            <label class="control control--search" for="searchInput">
+                <span>Search</span>
+                <input id="searchInput" type="search" placeholder="Search by title, tech, or feature" />
+            </label>
+
+            <label class="control" for="sortSelect">
+                <span>Sort</span>
+                <select id="sortSelect">
+                    <option value="name-asc">Name A-Z</option>
+                    <option value="name-desc">Name Z-A</option>
+                    <option value="status">Status</option>
+                </select>
+            </label>
+
+            <div id="tagFilters" class="tag-filters" aria-label="Technology filters"></div>
+        </section>
+
+        <section>
+            <div id="projectsGrid" class="projects-grid" aria-live="polite"></div>
+            <p id="emptyState" class="empty-state" hidden>
+                No projects match your filters.
+            </p>
+        </section>
+    </main>
+
+    <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
+    <aside id="detailsSidebar" class="sidebar" aria-live="polite" aria-label="Project details" aria-hidden="true">
+        <div class="sidebar__header">
+            <h2>Project Details</h2>
+            <button id="closeSidebar" class="sidebar__close" type="button" aria-label="Close details">
+                Close
+            </button>
+        </div>
+        <div id="sidebarContent" class="sidebar__content">
+            <p>Select any project card and click Show details.</p>
+        </div>
+    </aside>
+
+    <template id="projectCardTemplate">
+        <article class="project-card">
+            <img class="project-card__image" alt="" loading="lazy" />
+            <div class="project-card__body">
+                <div class="project-card__top">
+                    <h3 class="project-card__title"></h3>
+                    <p class="project-card__status"></p>
+                </div>
+                <p class="project-card__description"></p>
+                <ul class="project-card__tech"></ul>
+                <button class="project-card__button" type="button">Show details</button>
+            </div>
+        </article>
+    </template>
+
+    <script src="app.js" defer></script>
+</body>
+
+</html>

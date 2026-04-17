@@ -7,6 +7,10 @@
 #define MAP_XB 24
 #define MAP_YB 24
 #define TILE_SIZE 50
+#define MAP_SIZE 200
+#define MAPTILE_WIDTH (MAP_SIZE / MAP_XB)
+#define MAPTILE_HIGHT (MAP_SIZE / MAP_YB)
+#define RAY_KOUNT 200
 
 // helpers
 #define M_PI 3.14159265358979323846
@@ -58,28 +62,48 @@ struct PlayerControls
 
 void draw_map(SDL_Renderer *renderer)
 {
+        float ratioX = (float)MAP_SIZE / (MAP_XB * TILE_SIZE);
+        float ratioY = (float)MAP_SIZE / (MAP_YB * TILE_SIZE);
         for (int i = 0; i < MAP_YB; i++)
         {
                 for (int j = 0; j < MAP_XB; j++)
                 {
-                        if (map[i][j] != 0)
-                        {
-                                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                                SDL_FRect block = {j * TILE_SIZE, i * TILE_SIZE, TILE_SIZE - 1, TILE_SIZE - 1};
-                                SDL_RenderFillRect(renderer, &block);
-                        }
+                        if (map[i][j] == 1)
+                                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
+                        else if (map[i][j] == 2)
+                                SDL_SetRenderDrawColor(renderer, 0, 255, 255, 200);
+                        else if (map[i][j] == 3)
+                                SDL_SetRenderDrawColor(renderer, 0, 25, 255, 200);
+                        else if (map[i][j] > 0)
+                                SDL_SetRenderDrawColor(renderer, 255, 200, 255, 200);
+                        else
+                                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
+                        SDL_FRect block = {
+                            j * TILE_SIZE * ratioX,
+                            i * TILE_SIZE * ratioY,
+                            TILE_SIZE * ratioX,
+                            TILE_SIZE * ratioY,
+                        };
+                        SDL_RenderFillRect(renderer, &block);
                 }
         }
 }
 
 void draw_player(SDL_Renderer *renderer, struct Player player)
 {
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_FRect player_obj = {player.x, player.y, player.size, player.size};
+        float worldSizeX = MAP_XB * TILE_SIZE;
+        float worldSizeY = MAP_YB * TILE_SIZE;
+
+        float ratioX = (float)MAP_SIZE / worldSizeX;
+        float ratioY = (float)MAP_SIZE / worldSizeY;
+
+        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); // Yellow
+        SDL_FRect player_obj = {
+            player.x * ratioX - player.size / 2,
+            player.y * ratioY - player.size / 2,
+            player.size,
+            player.size};
         SDL_RenderFillRect(renderer, &player_obj);
-        float endX = player_obj.x + 100 * cosf(player.angle);
-        float endY = player_obj.y + 100 * sinf(player.angle);
-        SDL_RenderLine(renderer, player_obj.x, player_obj.y, endX, endY);
 }
 
 /*#########################| easy to understand but very ineffecint |#########################|*/
@@ -110,12 +134,12 @@ void draw_player(SDL_Renderer *renderer, struct Player player)
 //         }
 // }
 
-void draw_rays(SDL_Renderer *renderer, struct Player player)
+void draw_3d(SDL_Renderer *renderer, struct Player player)
 {
-        const int RAYS = 100;
+        const int RAYS = RAY_KOUNT; // RES - higher is good
         float start_angle = player.angle - (player.fov / 2.0f);
         float angle_step = player.fov / (float)RAYS;
-
+        int celltype = 0;
         for (int i = 0; i < RAYS; i++)
         {
                 float ray_angle = start_angle + (i * angle_step);
@@ -157,7 +181,7 @@ void draw_rays(SDL_Renderer *renderer, struct Player player)
                         sideDistY = (mapY + 1.0f - player.y / TILE_SIZE) * deltaDistY;
                 }
 
-                // 4. The DDA Loop (The "Jumping")
+                // 4. The DDA Loop
                 int hit = 0;
                 int side = 0; // 0 for X-wall, 1 for Y-wall
                 while (hit == 0)
@@ -180,40 +204,59 @@ void draw_rays(SDL_Renderer *renderer, struct Player player)
                         if (mapX < 0 || mapX >= MAP_XB || mapY < 0 || mapY >= MAP_YB)
                         {
                                 hit = 1;
+                                celltype = 1;
                         }
                         else if (map[mapY][mapX] > 0)
                         {
                                 hit = 1;
+                                celltype = map[mapY][mapX];
                         }
                 }
 
-                // 5. Calculate final distance
-                // This is math magic that prevents fish-eye and uses tile units
+                // 5. Calculate final distance (Corrected for Fisheye)
                 float wallDist;
                 if (side == 0)
                         wallDist = (sideDistX - deltaDistX);
                 else
                         wallDist = (sideDistY - deltaDistY);
 
-                // 6. Draw the line back on the screen (Multiply back by TILE_SIZE to draw)
-                // SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-                // SDL_RenderLine(renderer,
-                //                player.x,
-                //                player.y,
-                //                player.x + rayDirX * wallDist * TILE_SIZE,
-                //                player.y + rayDirY * wallDist * TILE_SIZE);
-                if (wallDist <= 0) wallDist = 0.01;
-                float wallH = SCREEN_HIG/wallDist;
-                float wallW = SCREEN_WID/RAYS;
-                float wallY = SCREEN_HIG/2 - wallDist/2;
-                float wallX = i*wallW;
+                // Fix Fisheye: multiply by cos of relative angle
+                float ca = player.angle - ray_angle;
+                if (ca < 0)
+                        ca += 2 * M_PI;
+                if (ca > 2 * M_PI)
+                        ca -= 2 * M_PI;
+                wallDist = wallDist * cosf(ca);
+
+                // 6. Projecting to 2D Screen
+                if (wallDist < 0.1f)
+                        wallDist = 0.1f; // Prevent division by zero
+
+                // wallH should be inversely proportional to distance
+                float wallH = (SCREEN_HIG / wallDist);
+
+                // Center the wall vertically
+                float wallY = (SCREEN_HIG / 2.0f) - (wallH / 2.0f);
+                float wallW = (float)SCREEN_WID / RAYS;
+                float wallX = i * wallW;
+
                 SDL_FRect wall = {wallX, wallY, wallW, wallH};
-                if (i%2 == 0) SDL_SetRenderDrawColor(renderer, 255, 100, 100, 255);
-                else if (i%3 == 0) SDL_SetRenderDrawColor(renderer, 0, 100, 100, 255);
-                else if (i%5 == 0) SDL_SetRenderDrawColor(renderer, 0, 100, 0, 255);
-                else SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+                if (celltype == 1)
+                        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // red
+                else if (celltype == 2)
+                        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // green
+                else if (celltype == 3)
+                        SDL_SetRenderDrawColor(renderer, 30, 60, 255, 255); // Blue
+                else
+                        SDL_SetRenderDrawColor(renderer, 100, 0, 100, 255); // Pink/Misc
+                if (side == 1)
+                {
+                        Uint8 r, g, b, a;
+                        SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
+                        SDL_SetRenderDrawColor(renderer, r / 2, g / 2, b / 2, a); // dim it
+                }
                 SDL_RenderFillRect(renderer, &wall);
-                
         }
 }
 
@@ -249,7 +292,7 @@ void update_player(struct Player *player, struct PlayerControls playerCtrl)
                 player->x += nextX;
         }
 
-        buffer = (nextY > 0) ? player->size/2 : -player->size/2;
+        buffer = (nextY > 0) ? player->size / 2 : -player->size / 2;
         int currentMapX = (int)(player->x) / TILE_SIZE;
         int nextMapY = (int)(player->y + nextY + buffer) / TILE_SIZE;
 
@@ -258,8 +301,6 @@ void update_player(struct Player *player, struct PlayerControls playerCtrl)
                 player->y += nextY;
         }
 }
-
-
 
 int main(int argc, char *argv[])
 {
@@ -270,8 +311,9 @@ int main(int argc, char *argv[])
         SDL_Renderer *renderer;
         if (!SDL_CreateWindowAndRenderer("Doom", SCREEN_WID, SCREEN_HIG, 0, &window, &renderer))
                 return -2;
-
-        struct Player player = {150, 150, 10, 3.0f, 0, 0.05f, DEG_TO_RAD(60)};
+        // set apllha mode on
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        struct Player player = {150, 150, 5, 3.0f, 0, 0.05f, DEG_TO_RAD(60)};
         struct PlayerControls pcontrol = {0};
         int running = 1;
 
@@ -312,10 +354,19 @@ int main(int argc, char *argv[])
 
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                 SDL_RenderClear(renderer);
+                // Draw Sky
+                SDL_SetRenderDrawColor(renderer, 204, 255, 255, 255); // lifht blue sky
+                SDL_FRect sky = {0, 0, SCREEN_WID, SCREEN_HIG / 2};
+                SDL_RenderFillRect(renderer, &sky);
 
-                // draw_map(renderer);
-                // draw_player(renderer, player);
-                draw_rays(renderer, player);
+                // Draw Floor
+                SDL_SetRenderDrawColor(renderer, 0, 51, 51, 255); // blueblack floor
+                SDL_FRect floor = {0, SCREEN_HIG / 2, SCREEN_WID, SCREEN_HIG / 2};
+                SDL_RenderFillRect(renderer, &floor);
+
+                draw_3d(renderer, player);
+                draw_map(renderer);
+                draw_player(renderer, player);
 
                 SDL_RenderPresent(renderer);
                 SDL_Delay(16);

@@ -308,8 +308,8 @@ function renderSidebar(projectId) {
     <h4>Run</h4>
     <p><code>${project.run}</code></p>
     <div class="panel-links">
-      <a href="${project.folder}/README.md" target="_blank" rel="noreferrer">Open README</a>
-      <a href="${project.folder}" target="_blank" rel="noreferrer">Open Folder</a>
+      <a href="https://github.com/kann4n/SDL_Projects/blob/main/${project.folder}/README.md" target="_blank" rel="noreferrer">Open README</a>
+      <a href="https://github.com/kann4n/SDL_Projects/tree/main/${project.folder}" target="_blank" rel="noreferrer">Open Folder</a>
     </div>
   `;
 }
@@ -331,7 +331,7 @@ function closeDetailsSidebar() {
 function render() {
   const filtered = getFilteredProjects();
   renderCards(filtered);
-  projectCount.textContent = String(filtered.length);
+  if (projectCount) projectCount.textContent = String(filtered.length);
 
   if (state.sidebarProjectId && !filtered.some((item) => item.id === state.sidebarProjectId)) {
     closeDetailsSidebar();

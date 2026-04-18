@@ -11,7 +11,7 @@ const PROJECTS = [
       "Renders colon separators between digit pairs"
     ],
     tech: ["C", "SDL3", "Realtime", "Rendering"],
-    image: "imgs/digital-clock.png",
+    image: "https://raw.githubusercontent.com/kann4n/SDL_Projects/main/imgs/digital-clock.png",
     dependencies: ["GCC", "SDL3"],
     controls: ["Close window: quit"],
     build: "gcc digital_clock/main.c digital_clock/clock.c -o digital_clock/digital_clock -lSDL3",
@@ -29,7 +29,7 @@ const PROJECTS = [
       "Smooth movement and directional rotation"
     ],
     tech: ["C", "SDL3", "Raycasting", "DDA"],
-    image: "imgs/raycaster-game001.png",
+    image: "https://raw.githubusercontent.com/kann4n/SDL_Projects/main/imgs/raycaster-game001.png",
     dependencies: ["GCC", "SDL3", "libm"],
     controls: [
       "W / Up: forward",
@@ -52,7 +52,7 @@ const PROJECTS = [
       "Real-time grid painting with brush modes"
     ],
     tech: ["C", "SDL3", "Simulation", "Cellular Automata"],
-    image: "imgs/fluid-v1.png",
+    image: "https://raw.githubusercontent.com/kann4n/SDL_Projects/main/imgs/fluid-v1.png",
     dependencies: ["GCC", "SDL3"],
     controls: [
       "Left mouse drag: paint selected cell",
@@ -77,7 +77,7 @@ const PROJECTS = [
       "HSL-based color generation per agent"
     ],
     tech: ["C", "SDL3", "Procedural", "Visualization"],
-    image: "imgs/random-walk-v1.png",
+    image: "https://raw.githubusercontent.com/kann4n/SDL_Projects/main/imgs/random-walk-v1.png",
     dependencies: ["GCC", "SDL3", "libm"],
     controls: ["Run with optional agent count: ./random_walk/random_walk 20"],
     build: "gcc random_walk/random_walk.c -o random_walk/random_walk -lSDL3 -lm",
@@ -95,7 +95,7 @@ const PROJECTS = [
       "Texture rendering with optional orbit paths"
     ],
     tech: ["C", "SDL3", "SDL3_image", "Physics", "Simulation"],
-    image: "imgs/space-sim-v0.1.png",
+    image: "https://raw.githubusercontent.com/kann4n/SDL_Projects/main/imgs/space-sim-v0.1.png",
     dependencies: ["GCC", "SDL3", "SDL3_image", "libm"],
     controls: [
       "Mouse wheel up: zoom in",

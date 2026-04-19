@@ -114,5 +114,33 @@
             </p>
             <h6>Learn more about DDA: [Lode's Raycasting Tutorial](https://lodev.org)</h6>
         </td>
+        <td>
+            <h3>3141</h3>
+            <img src="imgs/3141.png" width="400"/>
+            <p>
+                <strong>Mechanism</strong>
+                Why do colliding blocks compute pi?
+                <ul>
+                    <li>
+                    A large block collides with a smaller block on a frictionless surface, with a wall on one side.
+                    </li>
+                    <li>
+                    The total number of collisions between the blocks and the wall corresponds to digits of π.
+                    </li>
+                    <li>
+                    Increasing the mass of the larger block improves the precision of the approximation.
+                    </li>              
+                </ul>
+            </p>
+            <p>
+                <strong>Compile</strong><br>
+                <code>cd 3141 && gcc 3141.c -o 3141 -lSDL3</code>
+            </p>
+            <p>
+                <strong>Run</strong><br>
+                <code>./3141</code>
+            </p>
+            <h6>[But Why?](https://www.youtube.com/watch?v=jsYwFizhncE)</h6>
+        </td>
     </tr>
 </table>

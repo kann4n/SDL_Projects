@@ -39,7 +39,10 @@ int main()
 		while (SDL_PollEvent(&event))
 		{
 			if (event.type == SDL_EVENT_QUIT)
+			{
 				running = 0; // stop running
+				break;
+			}
 		}
 		// clearScrn
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

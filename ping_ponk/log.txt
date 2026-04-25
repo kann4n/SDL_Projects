@@ -1,0 +1,11 @@
+blob
+	Header    - int 0xABC456	// 4 bytes
+	Player[4] - int x, y, w, h;	// 100 bytes
+		    float vx, vy;
+		    int active;
+	Ball	  - int x, y, r;	// 20 bytes
+		    float vx, vy;
+	Status	  - int status;		// 4 bytes
+
+
+

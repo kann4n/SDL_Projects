@@ -1,12 +1,63 @@
-*.exe
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Generic C/C++ build artifacts
+*.o
 *.obj
+*.lo
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
 *.bin
 *.out
-*.o
+*.app
 
-.vscode/
+# Coverage/profiling artifacts
+*.gcda
+*.gcno
+*.gcov
+*.prof
+*.profraw
+
+# Logs and runtime outputs
+*.log
+log/
+
+# CMake out-of-source and in-source generated files
+build/
+cmake-build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+compile_commands.json
+install_manifest.txt
+Testing/
+
+# Generated executables in source folders
+3141/3141
+digital_clock/digital_clock
 doom/doom
-doom/*.out
+fluid/fluid
+random_walk/random_walk
+space_sim/space_sim
+ping_ponk/client
+ping_ponk/server
+ping_ponk/pingo
 
-# ALL BUILD FILES
-build/*
+# Environment/local config
+.env
+.env.*

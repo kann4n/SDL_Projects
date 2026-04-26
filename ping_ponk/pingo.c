@@ -7,7 +7,7 @@
 #define SCRN_HEIGHT 600
 #define BALL_SPEED 200.0f
 #define SPEED 400.0f
-#define debug 0 
+#define debug 0
 
 typedef enum
 {
@@ -101,25 +101,25 @@ int main()
 	}
 
 	Game game = {
-	    .left = {
-		.rect = {20, SCRN_HEIGHT * 0.25f, 1, 50},
-		.texture = IMG_LoadTexture(renderer, "assets/boxer.png"),
-		.status = Ready,
-	    },
-	    .right = {
-		.rect = {SCRN_WIDTH - 20, SCRN_HEIGHT * 0.75f, 1, 50},
-		.texture = IMG_LoadTexture(renderer, "assets/boxer.png"),
-		.status = Ready,
-	    },
-	    .ball = {
-		.x = SCRN_WIDTH / 2,
-		.y = SCRN_HEIGHT / 2,
-		.r = 10,
-		.vx = BALL_SPEED,
-		.vy = BALL_SPEED * 0.5f,
-		.texture = IMG_LoadTexture(renderer, "assets/red-ball.png"),
-	    },
-	    .running = true,
+		.left = {
+			.rect = {20, SCRN_HEIGHT * 0.25f, 1, 50},
+			.texture = IMG_LoadTexture(renderer, "assets/boxer.png"),
+			.status = Ready,
+		},
+		.right = {
+			.rect = {SCRN_WIDTH - 20, SCRN_HEIGHT * 0.75f, 1, 50},
+			.texture = IMG_LoadTexture(renderer, "assets/boxer.png"),
+			.status = Ready,
+		},
+		.ball = {
+			.x = SCRN_WIDTH / 2,
+			.y = SCRN_HEIGHT / 2,
+			.r = 10,
+			.vx = BALL_SPEED,
+			.vy = BALL_SPEED * 0.5f,
+			.texture = IMG_LoadTexture(renderer, "assets/red-ball.png"),
+		},
+		.running = true,
 	};
 	if (!game.left.texture || !game.right.texture || !game.ball.texture)
 	{
@@ -194,10 +194,10 @@ int main()
 		if (game.right.texture)
 			SDL_RenderTexture(renderer, game.right.texture, NULL, &game.right.rect);
 		SDL_FRect b_rect = {
-		    game.ball.x - game.ball.r,
-		    game.ball.y - game.ball.r,
-		    game.ball.r * 2,
-		    game.ball.r * 2,
+			game.ball.x - game.ball.r,
+			game.ball.y - game.ball.r,
+			game.ball.r * 2,
+			game.ball.r * 2,
 		};
 		if (game.ball.texture)
 			SDL_RenderTexture(renderer, game.ball.texture, NULL, &b_rect);

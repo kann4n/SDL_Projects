@@ -79,3 +79,9 @@ target_link_libraries(space_sim PRIVATE ${SDL3_TARGET} ${SDL3_IMAGE_TARGET} m)
 
 add_executable(pingo ping_ponk/pingo.c)
 target_link_libraries(pingo PRIVATE ${SDL3_TARGET} ${SDL3_IMAGE_TARGET} m)
+
+add_custom_command(TARGET pingo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_SOURCE_DIR}/ping_ponk/assets"
+            "$<TARGET_FILE_DIR:pingo>/assets"
+)

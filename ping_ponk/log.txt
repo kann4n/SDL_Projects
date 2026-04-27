@@ -8,4 +8,12 @@ blob
 	Status	  - int status;		// 4 bytes
 
 
-
+0427
+pingo.c
+	pureevil.ttf is stupid cause wtf it makes roman numbs.
+	code struct is not very good todo:	clean up & format it. 
+	cmake will not work cause the texture and ttf is not there and cmaketxt is
+	not updated. btw compling and running from inside the pingo/ will work.
+	cmd:	gcc pingo.c -Wall -lSDL3 -lSDL3_image -lSDL3_ttf
+	run:	./a.out
+	over over

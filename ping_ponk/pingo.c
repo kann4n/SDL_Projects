@@ -27,8 +27,9 @@ typedef struct
 typedef struct
 {
     float         x, y, r;
+    SDL_FRect        rect;
     SDL_Texture  *texture;
-    float         vx, vy;
+    float          vx, vy;
 } Ball;
 
 typedef struct
@@ -195,7 +196,9 @@ int main()
         .ball  = {
             .x = (float)SCRN_WIDTH / 2,
             .y = (float)SCRN_HEIGHT / 2,
-            .r = 15, .vx = BALL_SPEED,
+            .r = 15,
+            .rect = {(float)SCRN_WIDTH / 2, (float)SCRN_HEIGHT / 2, 15, 15},
+            .vx = BALL_SPEED,
             .vy = BALL_SPEED * 0.5f,
             .texture = IMG_LoadTexture(renderer, "assets/red-ball.png")
         },
@@ -276,17 +279,11 @@ int main()
 
         SDL_RenderTexture(renderer, game.left.texture,  NULL, &game.left.rect);
         SDL_RenderTexture(renderer, game.right.texture, NULL, &game.right.rect);
+        SDL_RenderTexture(renderer, game.ball.texture, NULL, &game.ball.rect);
 
-        SDL_FRect b_rect = {
-            game.ball.x - game.ball.r,
-            game.ball.y - game.ball.r,
-            game.ball.r * 2.0f,
-            game.ball.r * 2.0f,
-        };
-        SDL_RenderTexture(renderer, game.ball.texture, NULL, &b_rect);
         display_score(renderer, font, game.left.score, game.right.score);
         // end drawing
-        
+
         // update screen
         SDL_RenderPresent(renderer);
     }

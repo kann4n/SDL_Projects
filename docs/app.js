@@ -84,6 +84,49 @@ const PROJECTS = [
     run: "./random_walk/random_walk <num_of_agent>"
   },
   {
+    id: "ping-ponk",
+    name: "Pingo",
+    status: "complete",
+    folder: "ping_ponk",
+    description: "A two-player Pong game with textured sprites, angle-based ball deflection, and a score HUD.",
+    highlights: [
+      "Circle-vs-rectangle collision with angle deflection based on impact offset",
+      "Ball accelerates slightly on each paddle hit",
+      "Score HUD and game-over screen rendered with SDL3_ttf",
+      "Textured paddles and ball via SDL3_image"
+    ],
+    tech: ["C", "SDL3", "SDL3_image", "SDL3_ttf", "Game"],
+    image: "https://raw.githubusercontent.com/kann4n/SDL_Projects/main/imgs/pingo.png",
+    dependencies: ["GCC", "SDL3", "SDL3_image", "SDL3_ttf"],
+    controls: [
+      "W: left paddle up",
+      "S: left paddle down",
+      "Up arrow: right paddle up",
+      "Down arrow: right paddle down",
+      "First to 5 points wins"
+    ],
+    build: "gcc ping_ponk/pingo.c ping_ponk/game.c -o ping_ponk/pingo -lSDL3 -lSDL3_image -lSDL3_ttf",
+    run: "./ping_ponk/pingo"
+  },
+  {
+    id: "3141",
+    name: "3141",
+    status: "complete",
+    folder: "3141",
+    description: "A visual demonstration that elastic collisions between two boxes count to digits of π.",
+    highlights: [
+      "Elastic 1-D collision physics with configurable mass ratio",
+      "High-resolution sub-stepping (100,000 steps per frame) for accuracy",
+      "Live collision counter rendered with SDL debug text"
+    ],
+    tech: ["C", "SDL3", "Physics", "Visualization"],
+    image: "https://raw.githubusercontent.com/kann4n/SDL_Projects/main/imgs/3141.png",
+    dependencies: ["GCC", "SDL3"],
+    controls: ["Close window: quit"],
+    build: "gcc 3141/3141.c -o 3141/3141 -lSDL3",
+    run: "./3141/3141"
+  },
+  {
     id: "space-sim",
     name: "Space Simulation",
     status: "in-progress",

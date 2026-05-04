@@ -7,9 +7,9 @@
 
 #define SCRN_WIDTH  800
 #define SCRN_HEIGHT 600
-#define BALL_SPEED  200.0f
+#define BALL_SPEED  300.0f
 #define SPEED       400.0f
-#define WIN_SCORE   10
+#define WIN_SCORE   5
 #define PLYR_WIDTH  10
 #define PLYR_HEIGHT 50
 #define PLYR_OFFSET 10

@@ -62,4 +62,9 @@ gcc doom/doom.c doom/kengine.c -o game -lSDL3 -lm && ./game
     [But Why?](https://www.youtube.com/watch?v=jsYwFizhncE)
 </div>
 
+<div>    
+    <h3>pingo</h3>
+    <img src="imgs/pingo.png" width="400"/><br>
+</div>
+
 </div>

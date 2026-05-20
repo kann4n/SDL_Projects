@@ -4,13 +4,13 @@
 #include <SDL3/SDL.h>
 
 // Config
-#define SEGMENT_LEN 50.0f   // be > WID
-#define SEGMENT_WID 15.0f   // be < LEN/2
-#define GAP 5.0f            // be < WID/4 
-#define SCREEN_WID 670      // be > (LEN+WID)*6
-#define SCREEN_HIG 300      // be > LEN*3
+#define SEGMENT_LEN 50.0f // be > WID
+#define SEGMENT_WID 15.0f // be < LEN/2
+#define GAP 5.0f          // be < WID/4
+#define SCREEN_WID 670    // be > (LEN+WID)*6
+#define SCREEN_HIG 300    // be > LEN*3
 
-enum Mode 
+enum Mode
 {
     TIMER = 't',
     STOPWATCH = 's',
@@ -24,13 +24,15 @@ enum State
     RUNNING = 1
 };
 
-typedef struct Time{
+typedef struct Time
+{
     int hour;
     int minute;
     int second;
 } Time;
 
-typedef struct Clock{
+typedef struct Clock
+{
     Time time;
     int start_timesec;
     enum State state; // -1 = stopped, 0 = paused, 1 = running

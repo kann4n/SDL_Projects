@@ -1,6 +1,6 @@
-#include <stdio.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <stdio.h>
 
 #define SCREEN_WIDTH 900
 #define SCREEN_HIGHT 600
@@ -158,7 +158,6 @@ void updateCells(Cell cells[COLs][ROWs])
                         continue;
                     }
                 }
-                
             }
         }
     }

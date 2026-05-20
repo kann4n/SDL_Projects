@@ -39,18 +39,17 @@ void display_segment(SDL_Renderer *renderer, SDL_FPoint center, int align_vertic
     SDL_RenderGeometry(renderer, NULL, vertexs, 6, tris, 12);
 }
 
-void display_7segment(SDL_Renderer *renderer, SDL_FPoint centerDig,const int *pfilled_segments)
+void display_7segment(SDL_Renderer *renderer, SDL_FPoint centerDig, const int *pfilled_segments)
 {
     float halflen = SEGMENT_LEN / 2;
     float halfgap = GAP / 2;
-    SDL_FPoint segPoss[7] = {
-        {centerDig.x, centerDig.y - SEGMENT_LEN - GAP},
-        {centerDig.x, centerDig.y},
-        {centerDig.x, centerDig.y + SEGMENT_LEN + GAP},
-        {centerDig.x - halflen - GAP, centerDig.y - halflen - halfgap},
-        {centerDig.x + halflen + GAP, centerDig.y - halflen - halfgap},
-        {centerDig.x + halflen + GAP, centerDig.y + halflen + halfgap},
-        {centerDig.x - halflen - GAP, centerDig.y + halflen + halfgap}};
+    SDL_FPoint segPoss[7] = {{centerDig.x, centerDig.y - SEGMENT_LEN - GAP},
+                             {centerDig.x, centerDig.y},
+                             {centerDig.x, centerDig.y + SEGMENT_LEN + GAP},
+                             {centerDig.x - halflen - GAP, centerDig.y - halflen - halfgap},
+                             {centerDig.x + halflen + GAP, centerDig.y - halflen - halfgap},
+                             {centerDig.x + halflen + GAP, centerDig.y + halflen + halfgap},
+                             {centerDig.x - halflen - GAP, centerDig.y + halflen + halfgap}};
     int alignment[] = {0, 0, 0, 1, 1, 1, 1};
     for (int i = 0; i < 7; i++)
     {
@@ -67,11 +66,8 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
     {
         time_t curr_time = time(NULL);
         struct tm *lt = localtime(&curr_time);
-        int c_digs[6] = {
-            lt->tm_hour / 10, lt->tm_hour % 10, 
-            lt->tm_min / 10, lt->tm_min % 10, 
-            lt->tm_sec / 10, lt->tm_sec % 10
-        };
+        int c_digs[6] = {lt->tm_hour / 10, lt->tm_hour % 10, lt->tm_min / 10,
+                         lt->tm_min % 10,  lt->tm_sec / 10,  lt->tm_sec % 10};
         for (int i = 0; i < 6; i++)
         {
             display_7segment(renderer, digits_center_points[i], digits[c_digs[i]]);
@@ -80,18 +76,15 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
     else if (mode == STOPWATCH)
     {
         // Initialize start time once when we switch to this mode
-        if (timer_start == 0) timer_start = time(NULL);
+        if (timer_start == 0)
+            timer_start = time(NULL);
 
         double timepassed = difftime(time(NULL), timer_start);
         int hours = (int)timepassed / 3600;
         int mins = ((int)timepassed / 60) % 60;
         int secs = (int)timepassed % 60;
 
-        int c_digs[6] = {
-            hours / 10, hours % 10, 
-            mins / 10,  mins % 10, 
-            secs / 10,  secs % 10
-        };
+        int c_digs[6] = {hours / 10, hours % 10, mins / 10, mins % 10, secs / 10, secs % 10};
 
         for (int i = 0; i < 6; i++)
             display_7segment(renderer, digits_center_points[i], digits[c_digs[i]]);
@@ -99,7 +92,8 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
     else if (mode == TIMER)
     {
         // Initialize start time once when we switch to this mode
-        if (timer_start == 0) timer_start = time(NULL);
+        if (timer_start == 0)
+            timer_start = time(NULL);
 
         double timepassed = difftime(time(NULL), timer_start);
         double remaining_time = start_timesec - timepassed;
@@ -113,11 +107,7 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
         int mins = ((int)remaining_time / 60) % 60;
         int secs = (int)remaining_time % 60;
 
-        int c_digs[6] = {
-            hours / 10, hours % 10, 
-            mins / 10,  mins % 10, 
-            secs / 10,  secs % 10
-        };
+        int c_digs[6] = {hours / 10, hours % 10, mins / 10, mins % 10, secs / 10, secs % 10};
         // todo: check out -neg time
         for (int i = 0; i < 6; i++)
             display_7segment(renderer, digits_center_points[i], digits[c_digs[i]]);
@@ -125,7 +115,8 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
     else
     {
         static int logged_error = 0; // to avoid spamming logs
-        if (!logged_error) {
+        if (!logged_error)
+        {
             SDL_Log("Unknown mode: %d", mode);
             logged_error = 1;
         }
@@ -136,8 +127,10 @@ void display_clock(SDL_Renderer *renderer, enum Mode mode, int start_timesec)
 void display_colon(SDL_Renderer *renderer, SDL_FPoint centers[2])
 {
     int G = 10, S = 10;
-    SDL_FRect rects[4] = {
-        {centers[0].x - S / 2, ymid - G, S, S}, {centers[0].x - S / 2, ymid + G, S, S}, {centers[1].x - S / 2, ymid - G, S, S}, {centers[1].x - S / 2, ymid + G, S, S}};
+    SDL_FRect rects[4] = {{centers[0].x - S / 2, ymid - G, S, S},
+                          {centers[0].x - S / 2, ymid + G, S, S},
+                          {centers[1].x - S / 2, ymid - G, S, S},
+                          {centers[1].x - S / 2, ymid + G, S, S}};
     SDL_SetRenderDrawColor(renderer, 250, 50, 50, 255);
     for (int i = 0; i < 4; i++)
         SDL_RenderFillRect(renderer, &rects[i]);

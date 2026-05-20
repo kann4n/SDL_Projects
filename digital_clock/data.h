@@ -19,14 +19,8 @@ static const float ymid = SCREEN_HIG / 2.0f;
 static const float spacing = 5.0f;
 
 const static SDL_FPoint digits_center_points[6] = {
-    {SEGMENT_LEN * 2 - spacing, ymid},
-    {SEGMENT_LEN * 3 + SEGMENT_WID * 2 + spacing, ymid},
-    {SEGMENT_LEN * 6 - spacing, ymid},
-    {SEGMENT_LEN * 7 + SEGMENT_WID * 2 + spacing, ymid},
-    {SEGMENT_LEN * 10 - spacing, ymid},
-    {SEGMENT_LEN * 11 + SEGMENT_WID * 2 + spacing, ymid}
-};
-
-
+    {SEGMENT_LEN * 2 - spacing, ymid},  {SEGMENT_LEN * 3 + SEGMENT_WID * 2 + spacing, ymid},
+    {SEGMENT_LEN * 6 - spacing, ymid},  {SEGMENT_LEN * 7 + SEGMENT_WID * 2 + spacing, ymid},
+    {SEGMENT_LEN * 10 - spacing, ymid}, {SEGMENT_LEN * 11 + SEGMENT_WID * 2 + spacing, ymid}};
 
 #endif

@@ -18,9 +18,7 @@
 #define M_PI 3.14159265358979323846
 #define DEG_TO_RAD(angle) ((angle) * M_PI / 180.0f)
 
-
 extern int map[MAP_YB][MAP_XB];
-
 
 struct Player
 {

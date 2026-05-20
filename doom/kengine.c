@@ -76,11 +76,8 @@ void draw_player(SDL_Renderer *renderer, struct Player player)
     float ratioY = (float)MAP_SIZE / worldSizeY;
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); // Yellow
-    SDL_FRect player_obj = {
-        player.x * ratioX - player.size / 2,
-        player.y * ratioY - player.size / 2,
-        player.size,
-        player.size};
+    SDL_FRect player_obj = {player.x * ratioX - player.size / 2, player.y * ratioY - player.size / 2, player.size,
+                            player.size};
     SDL_RenderFillRect(renderer, &player_obj);
 }
 

@@ -71,21 +71,21 @@ int main(int argc, char *argv[])
         {
             switch (event.type)
             {
-                case SDL_EVENT_QUIT:
+            case SDL_EVENT_QUIT:
+                running = 0;
+                break;
+            case SDL_EVENT_KEY_DOWN:
+                if (event.key.key == SDLK_SPACE)
+                {
+                    //    todo: will do later
+                }
+                else if (event.key.key == SDLK_ESCAPE || event.key.key == SDLK_Q)
+                {
                     running = 0;
-                    break;
-                case SDL_EVENT_KEY_DOWN:
-                    if (event.key.key == SDLK_SPACE)
-                    {
-                        //    todo: will do later
-                    }
-                    else if (event.key.key == SDLK_ESCAPE || event.key.key == SDLK_Q)
-                    {
-                        running = 0;
-                    }
-                    break;
-                default:
-                    break;
+                }
+                break;
+            default:
+                break;
             }
         }
         // clear with black color

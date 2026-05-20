@@ -1,9 +1,8 @@
-#include <stdio.h>
 #include <SDL3/SDL.h>
+#include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <math.h>
-
 
 #define SCREEN_WIDTH 900
 #define SCREEN_HIGHT 600
@@ -31,12 +30,42 @@ void HSLtoRGB(float h, float s, float l, Uint8 *r, Uint8 *g, Uint8 *b)
     float m = l - c / 2.0;
 
     float rp, gp, bp;
-    if (h >= 0 && h < 60)       { rp = c; gp = x; bp = 0; }
-    else if (h >= 60 && h < 120){ rp = x; gp = c; bp = 0; }
-    else if (h >= 120 && h < 180){ rp = 0; gp = c; bp = x; }
-    else if (h >= 180 && h < 240){ rp = 0; gp = x; bp = c; }
-    else if (h >= 240 && h < 300){ rp = x; gp = 0; bp = c; }
-    else                        { rp = c; gp = 0; bp = x; }
+    if (h >= 0 && h < 60)
+    {
+        rp = c;
+        gp = x;
+        bp = 0;
+    }
+    else if (h >= 60 && h < 120)
+    {
+        rp = x;
+        gp = c;
+        bp = 0;
+    }
+    else if (h >= 120 && h < 180)
+    {
+        rp = 0;
+        gp = c;
+        bp = x;
+    }
+    else if (h >= 180 && h < 240)
+    {
+        rp = 0;
+        gp = x;
+        bp = c;
+    }
+    else if (h >= 240 && h < 300)
+    {
+        rp = x;
+        gp = 0;
+        bp = c;
+    }
+    else
+    {
+        rp = c;
+        gp = 0;
+        bp = x;
+    }
 
     *r = (Uint8)((rp + m) * 255);
     *g = (Uint8)((gp + m) * 255);
@@ -116,15 +145,14 @@ int main(int argc, const char *argv[]) // argc = arg count, argv = arg vector
         agents[i].rect.y = SCREEN_HIGHT / 2;
         agents[i].rect.w = R_WIDTH;
         agents[i].rect.h = R_HEIGHT;
-        
 
-	// Check if this is the very last agent in the array
-        if (i == num_of_agent - 1 && num_of_agent > 1) 
+        // Check if this is the very last agent in the array
+        if (i == num_of_agent - 1 && num_of_agent > 1)
         {
             // Set the last agent to black
             agents[i].color = SDL_MapRGB(Pixformat, NULL, 1, 1, 1);
         }
-        else 
+        else
         {
             // Set other agents to their HSL calculated colors
             float h = (float)(360.0 / (num_of_agent > 1 ? num_of_agent - 1 : 1)) * i;
